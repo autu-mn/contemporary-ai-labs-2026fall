@@ -1,0 +1,16 @@
+﻿model,true,pred,count
+MultinomialNB,1 windows,2 pc.hw,9
+MultinomialNB,0 graphics,2 pc.hw,8
+MultinomialNB,2 pc.hw,1 windows,6
+MultinomialNB,1 windows,0 graphics,5
+MultinomialNB,7 electron,6 crypt,3
+Linear SVM,2 pc.hw,1 windows,9
+Linear SVM,1 windows,2 pc.hw,7
+Linear SVM,7 electron,3 autos,6
+Linear SVM,0 graphics,1 windows,6
+Linear SVM,0 graphics,2 pc.hw,5
+MLP,2 pc.hw,1 windows,9
+MLP,0 graphics,2 pc.hw,7
+MLP,1 windows,2 pc.hw,6
+MLP,2 pc.hw,0 graphics,4
+MLP,0 graphics,1 windows,4

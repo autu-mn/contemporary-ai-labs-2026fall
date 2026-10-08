@@ -1,0 +1,11 @@
+﻿,graphics,windows,pc.hw,autos,motorcyc,baseball,crypt,electron,med,mideast
+graphics,101,4,4,0,0,0,0,1,0,0
+windows,1,105,4,0,0,0,0,1,0,0
+pc.hw,4,6,97,0,0,0,0,4,0,0
+autos,1,1,0,109,0,0,0,0,0,0
+motorcyc,0,0,0,0,111,1,0,0,0,0
+baseball,0,0,0,0,0,112,0,0,0,0
+crypt,0,1,2,1,0,0,105,2,0,0
+electron,0,2,10,0,0,0,0,99,0,0
+med,2,0,0,0,0,0,0,0,109,0
+mideast,0,0,0,0,0,0,0,0,0,106

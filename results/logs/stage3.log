@@ -1,0 +1,66 @@
+[NB] alpha=0.001                        train=0.9979 val=0.9268 f1=0.9269 dim= 34270 fit=1.5s cv=0.9293±0.0032
+[NB] alpha=0.003                        train=0.9979 val=0.9286 f1=0.9288 dim= 34270 fit=1.6s cv=0.9318±0.0049
+[NB] alpha=0.01                         train=0.9969 val=0.9340 f1=0.9341 dim= 34270 fit=1.4s cv=0.9352±0.0060
+[NB] alpha=0.03                         train=0.9952 val=0.9394 f1=0.9396 dim= 34270 fit=1.4s cv=0.9368±0.0055
+[NB] alpha=0.1                          train=0.9919 val=0.9412 f1=0.9414 dim= 34270 fit=1.4s cv=0.9376±0.0065
+[NB] alpha=0.3                          train=0.9849 val=0.9268 f1=0.9268 dim= 34270 fit=1.5s cv=0.9320±0.0063
+[NB] alpha=1.0                          train=0.9728 val=0.9141 f1=0.9142 dim= 34270 fit=1.5s cv=0.9142±0.0056
+[NB-check] alpha=0.1 sublinear_tf=True        train=0.9922 val=0.9385 f1=0.9385 dim= 34270 fit=1.5s cv=0.9368±0.0059
+  → NB 选择 alpha=0.1 val=0.9412 cv=0.9376 (SE≈0.0071)
+
+[SVM-linear] LinearSVC C=0.01                   train=0.9374 val=0.8807 f1=0.8801 dim= 34270 fit=1.7s cv=0.8809±0.0056
+[SVM-linear] LinearSVC C=0.03                   train=0.9618 val=0.9014 f1=0.9014 dim= 34270 fit=1.8s cv=0.9082±0.0047
+[SVM-linear] LinearSVC C=0.1                    train=0.9851 val=0.9168 f1=0.9167 dim= 34270 fit=1.7s cv=0.9261±0.0066
+[SVM-linear] LinearSVC C=0.3                    train=0.9963 val=0.9331 f1=0.9332 dim= 34270 fit=1.8s cv=0.9348±0.0080
+[SVM-linear] LinearSVC C=1                      train=0.9992 val=0.9367 f1=0.9368 dim= 34270 fit=1.9s cv=0.9382±0.0080
+[SVM-linear] LinearSVC C=3                      train=0.9998 val=0.9331 f1=0.9332 dim= 34270 fit=2.2s cv=0.9361±0.0098
+[SVM-linear] LinearSVC C=10                     train=0.9998 val=0.9322 f1=0.9324 dim= 34270 fit=2.5s cv=0.9348±0.0089
+[SVM-linear] LinearSVC C=100                    train=0.9998 val=0.9304 f1=0.9305 dim= 34270 fit=6.8s cv=0.9321±0.0099
+  → SVM 选择 C=0.3 val=0.9331 cv=0.9348 (SE≈0.0073)
+
+[SVM-kernel] SVC linear C=0.3                   train=0.9678 val=0.8960 f1=0.8972 dim= 34270 fit=52.0s
+[SVM-kernel] SVC linear C=1                     train=0.9963 val=0.9231 f1=0.9236 dim= 34270 fit=56.4s
+[SVM-kernel] SVC linear C=10                    train=0.9998 val=0.9250 f1=0.9251 dim= 34270 fit=58.3s
+[SVM-kernel] SVC rbf C=1 gamma=scale            train=0.9986 val=0.9159 f1=0.9164 dim= 34270 fit=80.2s
+[SVM-kernel] SVC rbf C=10 gamma=scale           train=0.9998 val=0.9231 f1=0.9235 dim= 34270 fit=250.9s
+[SVM-kernel] SVC rbf C=10 gamma=0.1             train=0.9988 val=0.9286 f1=0.9289 dim= 34270 fit=64.0s
+[SVM-kernel] SVC rbf C=100 gamma=0.1            train=0.9998 val=0.9286 f1=0.9288 dim= 34270 fit=67.1s
+[MLP] hidden=(100,) alpha=0.01           train=0.9833 val=0.9313 f1=0.9314 dim= 34270 fit=96.9s
+[MLP] hidden=(100,) alpha=0.0001         train=0.9942 val=0.9430 f1=0.9432 dim= 34270 fit=151.6s
+[MLP] hidden=(256,) alpha=0.01           train=0.9924 val=0.9385 f1=0.9387 dim= 34270 fit=220.2s
+[MLP] hidden=(256,) alpha=0.0001         train=0.9926 val=0.9376 f1=0.9377 dim= 34270 fit=220.0s
+[MLP] hidden=(256, 128) alpha=0.01       train=0.9940 val=0.9403 f1=0.9402 dim= 34270 fit=237.0s
+[MLP] hidden=(256, 128) alpha=0.0001     train=0.9946 val=0.9403 f1=0.9404 dim= 34270 fit=282.6s
+  → MLP 选择 hidden=(100,) alpha=0.0001 val=0.9430 (SE≈0.0070)
+
+[MLP-epoch]  1 loss=2.1791 train=0.8359 val=0.7649
+[MLP-epoch]  2 loss=1.6955 train=0.9713 val=0.9096
+[MLP-epoch]  3 loss=1.1281 train=0.9851 val=0.9268
+[MLP-epoch]  4 loss=0.6816 train=0.9888 val=0.9367
+[MLP-epoch]  5 loss=0.4130 train=0.9924 val=0.9385
+[MLP-epoch]  6 loss=0.2656 train=0.9950 val=0.9412
+[MLP-epoch]  7 loss=0.1819 train=0.9977 val=0.9448
+[MLP-epoch]  8 loss=0.1311 train=0.9981 val=0.9430
+[MLP-epoch]  9 loss=0.0985 train=0.9984 val=0.9412
+[MLP-epoch] 10 loss=0.0764 train=0.9988 val=0.9430
+[MLP-epoch] 11 loss=0.0610 train=0.9988 val=0.9430
+[MLP-epoch] 12 loss=0.0498 train=0.9994 val=0.9439
+[MLP-epoch] 13 loss=0.0415 train=0.9994 val=0.9430
+[MLP-epoch] 14 loss=0.0352 train=0.9996 val=0.9412
+[MLP-epoch] 15 loss=0.0303 train=0.9996 val=0.9412
+[MLP-epoch] 16 loss=0.0265 train=0.9996 val=0.9430
+[MLP-epoch] 17 loss=0.0233 train=0.9996 val=0.9439
+[MLP-epoch] 18 loss=0.0208 train=0.9996 val=0.9430
+[MLP-epoch] 19 loss=0.0187 train=0.9996 val=0.9430
+[MLP-epoch] 20 loss=0.0170 train=0.9996 val=0.9421
+[MLP-epoch] 21 loss=0.0155 train=0.9998 val=0.9421
+[MLP-epoch] 22 loss=0.0142 train=0.9998 val=0.9421
+[MLP-epoch] 23 loss=0.0132 train=0.9998 val=0.9412
+[MLP-epoch] 24 loss=0.0122 train=0.9998 val=0.9412
+[MLP-epoch] 25 loss=0.0114 train=0.9998 val=0.9412
+[MLP-epoch] 26 loss=0.0107 train=0.9998 val=0.9412
+[MLP-epoch] 27 loss=0.0101 train=0.9998 val=0.9412
+[MLP-epoch] 28 loss=0.0096 train=0.9998 val=0.9412
+[MLP-epoch] 29 loss=0.0091 train=0.9998 val=0.9412
+[MLP-epoch] 30 loss=0.0087 train=0.9998 val=0.9412
+各模型选定参数: {'nb': {'alpha': 0.1}, 'linsvc': {'C': 0.3, 'max_iter': 5000}, 'mlp': {'hidden_layer_sizes': [100], 'alpha': 0.0001, 'early_stopping': True, 'max_iter': 50, 'n_iter_no_change': 5}}

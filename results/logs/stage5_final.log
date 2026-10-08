@@ -1,0 +1,29 @@
+锁定配置与阶段 3/4 的选择结果一致。
+=== 1. 本地测试集评估（仅一次）===
+注意：本地测试集此前已评估过；本次为复现运行，配置未改变时结果应完全一致。
+[local-test] MultinomialNB                                acc=0.9250 f1=0.9261 params=376,500 fit=4.5s
+[local-test] Linear SVM                                   acc=0.9385 f1=0.9389 params=376,500 fit=4.8s
+[local-test] MLP                                          acc=0.9385 f1=0.9394 params=3,766,010 fit=178.4s
+[local-test] Linear SVM + Subject x3 + word+char n-gram   acc=0.9530 f1=0.9535 params=1,376,500 fit=70.8s
+
+最终方案在本地测试集上的逐类结果:
+              precision    recall  f1-score   support
+
+    graphics     0.9266    0.9182    0.9224       110
+     windows     0.8824    0.9459    0.9130       111
+       pc.hw     0.8291    0.8739    0.8509       111
+       autos     0.9909    0.9820    0.9864       111
+    motorcyc     1.0000    0.9911    0.9955       112
+    baseball     0.9912    1.0000    0.9956       112
+       crypt     1.0000    0.9459    0.9722       111
+    electron     0.9252    0.8919    0.9083       111
+         med     1.0000    0.9820    0.9909       111
+     mideast     1.0000    1.0000    1.0000       106
+
+    accuracy                         0.9530      1106
+   macro avg     0.9545    0.9531    0.9535      1106
+weighted avg     0.9544    0.9530    0.9534      1106
+
+=== 2. 全量重训并预测官方测试集 ===
+
+已写出 predictions.csv: 2457 行 × 1 列，无表头，标签范围 0-9

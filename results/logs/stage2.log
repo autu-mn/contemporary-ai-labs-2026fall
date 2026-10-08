@@ -1,0 +1,47 @@
+[F1 representation] kind=tfidf                         train=0.9994 val=0.9403 f1=0.9404 dim= 93579 fit=3.1s cv=0.9403±0.0084
+[F1 representation-nb] kind=tfidf                         train=0.9942 val=0.9403 f1=0.9404 dim= 93579 fit=1.9s
+[F1 representation] kind=tf                            train=0.9965 val=0.9123 f1=0.9120 dim= 93579 fit=2.8s cv=0.9181±0.0067
+[F1 representation-nb] kind=tf                            train=0.9853 val=0.9222 f1=0.9220 dim= 93579 fit=2.0s
+[F1 representation] kind=count                         train=0.9998 val=0.8843 f1=0.8839 dim= 93579 fit=16.3s cv=0.8858±0.0113
+[F1 representation-nb] kind=count                         train=0.9096 val=0.8562 f1=0.8249 dim= 93579 fit=2.1s
+[F1 representation] kind=binary                        train=0.9998 val=0.8933 f1=0.8935 dim= 93579 fit=4.8s cv=0.8834±0.0034
+[F1 representation-nb] kind=binary                        train=0.9492 val=0.8653 f1=0.8446 dim= 93579 fit=2.1s
+  → F1 representation 选择 kind=tfidf  (val SE≈0.0071; 参照 F1 representation kind=tfidf cv=0.9403±0.0084)  当前配置: kind=tfidf, {}
+
+[F2 ngram_range] ngram_range=(1, 1)                 train=0.9994 val=0.9403 f1=0.9404 dim= 93579 fit=2.5s cv=0.9403±0.0084
+[F2 ngram_range-nb] ngram_range=(1, 1)                 train=0.9942 val=0.9403 f1=0.9404 dim= 93579 fit=2.1s
+[F2 ngram_range] ngram_range=(1, 2)                 train=0.9998 val=0.9394 f1=0.9397 dim=649569 fit=13.1s cv=0.9430±0.0054
+[F2 ngram_range-nb] ngram_range=(1, 2)                 train=0.9992 val=0.9385 f1=0.9386 dim=649569 fit=8.9s
+  → F2 ngram_range 选择 ngram_range=(1, 1)  (val SE≈0.0071; 参照 F2 ngram_range ngram_range=(1, 2) cv=0.9430±0.0054)  当前配置: kind=tfidf, {'ngram_range': (1, 1)}
+
+[F3 sublinear_tf] sublinear_tf=False                 train=0.9994 val=0.9403 f1=0.9404 dim= 93579 fit=2.5s cv=0.9403±0.0084
+[F3 sublinear_tf-nb] sublinear_tf=False                 train=0.9942 val=0.9403 f1=0.9404 dim= 93579 fit=1.9s
+[F3 sublinear_tf] sublinear_tf=True                  train=0.9996 val=0.9403 f1=0.9404 dim= 93579 fit=2.7s cv=0.9420±0.0067
+[F3 sublinear_tf-nb] sublinear_tf=True                  train=0.9944 val=0.9376 f1=0.9376 dim= 93579 fit=1.9s
+  → F3 sublinear_tf 选择 sublinear_tf=False  (val SE≈0.0071; 参照 F2 ngram_range ngram_range=(1, 2) cv=0.9430±0.0054)  当前配置: kind=tfidf, {'ngram_range': (1, 1), 'sublinear_tf': False}
+
+[F4 min_df] min_df=1                           train=0.9994 val=0.9403 f1=0.9404 dim= 93579 fit=3.6s cv=0.9403±0.0084
+[F4 min_df-nb] min_df=1                           train=0.9942 val=0.9403 f1=0.9404 dim= 93579 fit=2.0s
+[F4 min_df] min_df=2                           train=0.9992 val=0.9367 f1=0.9368 dim= 34270 fit=2.4s cv=0.9382±0.0080
+[F4 min_df-nb] min_df=2                           train=0.9919 val=0.9412 f1=0.9414 dim= 34270 fit=1.8s
+[F4 min_df] min_df=5                           train=0.9992 val=0.9313 f1=0.9312 dim= 15024 fit=2.7s cv=0.9299±0.0090
+[F4 min_df-nb] min_df=5                           train=0.9864 val=0.9268 f1=0.9270 dim= 15024 fit=1.7s
+  → F4 min_df 选择 min_df=2  (val SE≈0.0071; 参照 F2 ngram_range ngram_range=(1, 2) cv=0.9430±0.0054)  当前配置: kind=tfidf, {'ngram_range': (1, 1), 'sublinear_tf': False, 'min_df': 2}
+
+[F5 max_df] max_df=1.0                         train=0.9992 val=0.9367 f1=0.9368 dim= 34270 fit=2.0s cv=0.9382±0.0080
+[F5 max_df-nb] max_df=1.0                         train=0.9919 val=0.9412 f1=0.9414 dim= 34270 fit=1.9s
+[F5 max_df] max_df=0.5                         train=0.9992 val=0.9358 f1=0.9359 dim= 34248 fit=2.5s cv=0.9374±0.0085
+[F5 max_df-nb] max_df=0.5                         train=0.9919 val=0.9421 f1=0.9423 dim= 34248 fit=1.7s
+  → F5 max_df 选择 max_df=1.0  (val SE≈0.0073; 参照 F2 ngram_range ngram_range=(1, 2) cv=0.9430±0.0054)  当前配置: kind=tfidf, {'ngram_range': (1, 1), 'sublinear_tf': False, 'min_df': 2, 'max_df': 1.0}
+
+[F6 max_features] max_features=None                  train=0.9992 val=0.9367 f1=0.9368 dim= 34270 fit=2.1s cv=0.9382±0.0080
+[F6 max_features-nb] max_features=None                  train=0.9919 val=0.9412 f1=0.9414 dim= 34270 fit=1.8s
+[F6 max_features] max_features=50000                 train=0.9992 val=0.9367 f1=0.9368 dim= 34270 fit=2.3s cv=0.9382±0.0080
+[F6 max_features-nb] max_features=50000                 train=0.9919 val=0.9412 f1=0.9414 dim= 34270 fit=1.8s
+[F6 max_features] max_features=20000                 train=0.9992 val=0.9322 f1=0.9322 dim= 20000 fit=2.2s cv=0.9356±0.0081
+[F6 max_features-nb] max_features=20000                 train=0.9891 val=0.9358 f1=0.9359 dim= 20000 fit=1.8s
+[F6 max_features] max_features=5000                  train=0.9984 val=0.9087 f1=0.9084 dim=  5000 fit=2.2s cv=0.9149±0.0080
+[F6 max_features-nb] max_features=5000                  train=0.9641 val=0.8996 f1=0.8999 dim=  5000 fit=1.7s
+  → F6 max_features 选择 max_features=None  (val SE≈0.0073; 参照 F2 ngram_range ngram_range=(1, 2) cv=0.9430±0.0054)  当前配置: kind=tfidf, {'ngram_range': (1, 1), 'sublinear_tf': False, 'min_df': 2, 'max_df': 1.0, 'max_features': None}
+
+最终特征配置: kind = tfidf  params = {'ngram_range': (1, 1), 'sublinear_tf': False, 'min_df': 2, 'max_df': 1.0, 'max_features': None}

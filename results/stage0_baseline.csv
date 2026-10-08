@@ -1,0 +1,5 @@
+﻿group,name,model,train_acc,val_acc,val_f1,n_features,n_params,fit_sec,pred_sec,prep,vec_kind,vec_params,model_params,n_iter
+E0,draft SVC() rbf,svc,0.9980605120248255,0.8878842676311031,0.8886630801085348,5000,22335131,111.4,7.185,None,tfidf,{'max_features': 5000},{},1458.0
+E0,NB default,nb,0.9445306439100077,0.8824593128390597,0.8825602570714691,5000,50010,1.6,0.26,None,tfidf,{'max_features': 5000},{},
+E0,LinearSVC default,linsvc,0.9986423584173778,0.9005424954792043,0.9000685418398735,5000,50010,2.34,0.315,None,tfidf,{'max_features': 5000},{},11.0
+E0,"MLP (100,) max_iter=300",mlp,1.0,0.9014466546112115,0.9015815845500302,5000,501110,88.5,1.312,None,tfidf,{'max_features': 5000},"{'hidden_layer_sizes': (100,), 'max_iter': 300}",92.0

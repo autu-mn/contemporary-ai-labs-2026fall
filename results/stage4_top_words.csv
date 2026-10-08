@@ -1,0 +1,21 @@
+﻿setting,label,top_words
+P0 keep header,0 graphics,graphics image 3d gif images polygon tiff pov formats hacker
+P0 keep header,1 windows,windows microsoft file ax manager win nt cica font ms
+P0 keep header,2 pc.hw,drive monitor pc motherboard scsi bios gateway modem bus card
+P0 keep header,3 autos,car cars auto dealer oil eliot ford engine toyota automotive
+P0 keep header,4 motorcyc,bike dod bikes motorcycle bmw ride riding motorcycles rider dog
+P0 keep header,5 baseball,baseball game players team stats he games ball sox year
+P0 keep header,6 crypt,clipper encryption key des government nsa security pgp chip crypto
+P0 keep header,7 electron,circuit copy tv electronics audio voltage amp power radio 8051
+P0 keep header,8 med,doctor health medical msg pitt disease photography treatment cancer med
+P0 keep header,9 mideast,israel israeli jews turkish muslims serdar arab armenians muslim bosnia
+P1 strip header,0 graphics,graphics image 3d images gif pov tiff hacker polygon formats
+P1 strip header,1 windows,windows microsoft ax file win manager cica nt font access
+P1 strip header,2 pc.hw,drive monitor modem motherboard scsi pc bios gateway port monitors
+P1 strip header,3 autos,car cars auto ford dealer oil toyota engine automotive geico
+P1 strip header,4 motorcyc,bike dod bikes motorcycle ride riding bmw motorcycles rider dog
+P1 strip header,5 baseball,baseball game players team stats games ball he year sox
+P1 strip header,6 crypt,clipper encryption key des government nsa crypto security tempest chip
+P1 strip header,7 electron,circuit copy tv electronics voltage audio amp 8051 power scope
+P1 strip header,8 med,doctor health medical msg disease photography treatment pitt cancer medicine
+P1 strip header,9 mideast,israel israeli jews turkish muslims armenians arab freedom muslim serdar

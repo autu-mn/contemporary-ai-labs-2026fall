@@ -1,0 +1,109 @@
+=== 1. 选定配置：验证集表现与复杂度（单进程计时）===
+[final-val] MultinomialNB  val=0.9412 f1=0.9414 params=342,710 fit=1.6s pred=0.27s
+[final-val] Linear SVM     val=0.9331 f1=0.9332 params=342,710 fit=1.9s pred=0.25s
+[final-val] MLP            val=0.9430 f1=0.9432 params=3,428,110 fit=374.4s pred=0.32s
+
+=== 2. 开发集 5 折 CV（相同折）===
+[CV] MultinomialNB  folds=[0.9322 0.9314 0.9433 0.9473 0.9337] mean=0.9376±0.0065
+[CV] Linear SVM     folds=[0.9298 0.9314 0.9465 0.9417 0.9249] mean=0.9348±0.0080
+[CV] MLP            folds=[0.9242 0.9322 0.9393 0.9489 0.9321] mean=0.9353±0.0083
+  配对差 Linear SVM - MultinomialNB: mean=-0.0027 std=0.0042 正差折数=1/5
+  配对差 Linear SVM - MLP: mean=-0.0005 std=0.0061 正差折数=2/5
+  配对差 MLP - MultinomialNB: mean=-0.0022 std=0.0035 正差折数=2/5
+
+=== 3. 验证集误差分析 ===
+
+逐类 F1（验证集）:
+            MultinomialNB  Linear SVM     MLP
+0 graphics         0.8796      0.8972  0.9014
+1 windows          0.8767      0.8821  0.8783
+2 pc.hw            0.8793      0.8610  0.8597
+3 autos            0.9732      0.9386  0.9640
+4 motorcyc         0.9823      0.9774  0.9823
+5 baseball         0.9820      0.9607  0.9776
+6 crypt            0.9524      0.9821  0.9778
+7 electron         0.9346      0.8837  0.9238
+8 med              0.9630      0.9633  0.9772
+9 mideast          0.9906      0.9858  0.9905
+
+各模型最常见的 5 个错分方向:
+        model       true       pred  count
+MultinomialNB  1 windows    2 pc.hw      9
+MultinomialNB 0 graphics    2 pc.hw      8
+MultinomialNB    2 pc.hw  1 windows      6
+MultinomialNB  1 windows 0 graphics      5
+MultinomialNB 7 electron    6 crypt      3
+   Linear SVM    2 pc.hw  1 windows      9
+   Linear SVM  1 windows    2 pc.hw      7
+   Linear SVM 7 electron    3 autos      6
+   Linear SVM 0 graphics  1 windows      6
+   Linear SVM 0 graphics    2 pc.hw      5
+          MLP    2 pc.hw  1 windows      9
+          MLP 0 graphics    2 pc.hw      7
+          MLP  1 windows    2 pc.hw      6
+          MLP    2 pc.hw 0 graphics      4
+          MLP 0 graphics  1 windows      4
+
+线性 SVM 错分 74 条，其中三个模型全错 40 条
+--- true=windows svm=pc.hw nb=pc.hw mlp=pc.hw words=112
+Diamond Viper Hi folks, At the end of the summer I'm planning on getting a new computer (486DX50 or 486DX2/66) and have been poking around in Computer Shopper. Anyway I saw the ads for the Diamond Viper (Local Bus, 2MB memory, 50 million+ WinMarks) and was wondering if anyone has had any experience 
+--- true=graphics svm=windows nb=windows mlp=windows words=40
+Re: Diamond Stelth 24- any good? The real problem w/ the Stealth from what I've heard is that Diamond won't tell anyone how to program their proprietary clock stuff, so X under Linux and 386BSD won't run.... Patrick Bridges patrick@erc.msstate.edu
+--- true=electron svm=med nb=med mlp=med words=72
+Hatley & Pirbhai help... Hello, Has anyone used the Requirements Analsys methodology Hatley & Pirbhai ? I am a British final year real-time degree student, and as a project I am covering this methodology. I would be very grateful to anyone who could give me their views on this method. Please mail me
+--- true=pc.hw svm=windows nb=windows mlp=windows words=163
+Re: Help! Phar lap??? Spectre (spectre@nmt.edu) wrote: : Could some one tell me what: : Phar Lap err 35: The 386 chip is currently executing in virtual : 8086 mode under the control : of another program. You must turn off this other program in order : to use 386|DOS-Extender to run in protected mode
+--- true=graphics svm=pc.hw nb=pc.hw mlp=pc.hw words=118
+VIDEO SPEED I am using an ibm dx-50 with EISA and local bus....and I need to get a local bus video card.... The only hitch is that I need one that will allow me to do the fastest anims (or flics) from ram. I have 64-megs of ram in 16-meg simms I am using 3D-Studio from Autodesk and Imagine from Impu
+--- true=graphics svm=electron nb=electron mlp=electron words=60
+Looking for Mr. radon Does anyone have a radon transform in C that they could send me? Any help accepted, -- | .-, ###|For a lot of .au music: ftp sounds.sdsu.edu | / / __ , _ ###|then cat file.au > /dev/audio | \_>/ >_/ (_/\_/<>_ |UB library catalog:telnet bison.acsu.buffalo.edu |_ 14261 _|(When in
+
+=== 4. 权重词与捷径特征 ===
+
+线性 SVM 每类权重最高的 10 个词 [P0 keep header]:
+  0 graphics  graphics image 3d gif images polygon tiff pov formats hacker
+  1 windows   windows microsoft file ax manager win nt cica font ms
+  2 pc.hw     drive monitor pc motherboard scsi bios gateway modem bus card
+  3 autos     car cars auto dealer oil eliot ford engine toyota automotive
+  4 motorcyc  bike dod bikes motorcycle bmw ride riding motorcycles rider dog
+  5 baseball  baseball game players team stats he games ball sox year
+  6 crypt     clipper encryption key des government nsa security pgp chip crypto
+  7 electron  circuit copy tv electronics audio voltage amp power radio 8051
+  8 med       doctor health medical msg pitt disease photography treatment cancer med
+  9 mideast   israel israeli jews turkish muslims serdar arab armenians muslim bosnia
+
+线性 SVM 每类权重最高的 10 个词 [P1 strip header]:
+  0 graphics  graphics image 3d images gif pov tiff hacker polygon formats
+  1 windows   windows microsoft ax file win manager cica nt font access
+  2 pc.hw     drive monitor modem motherboard scsi pc bios gateway port monitors
+  3 autos     car cars auto ford dealer oil toyota engine automotive geico
+  4 motorcyc  bike dod bikes motorcycle ride riding bmw motorcycles rider dog
+  5 baseball  baseball game players team stats games ball he year sox
+  6 crypt     clipper encryption key des government nsa crypto security tempest chip
+  7 electron  circuit copy tv electronics voltage audio amp 8051 power scope
+  8 med       doctor health medical msg disease photography treatment pitt cancer medicine
+  9 mideast   israel israeli jews turkish muslims armenians arab freedom muslim serdar
+
+=== 5. 创新实验（验证集 + 开发集 CV）===
+[I1] Linear SVM + Subject x2            train=0.9967 val=0.9367 f1=0.9369 dim= 34270 fit=2.0s cv=0.9403±0.0062
+[I1] Linear SVM + Subject x3            train=0.9957 val=0.9394 f1=0.9396 dim= 34270 fit=2.0s cv=0.9411±0.0042
+[I1] MultinomialNB + Subject x3         train=0.9915 val=0.9448 f1=0.9451 dim= 34270 fit=1.6s cv=0.9428±0.0063
+[I2] Linear SVM + word+char n-gram      train=0.9986 val=0.9439 f1=0.9440 dim=134270 fit=37.4s cv=0.9428±0.0071
+[I2] Linear SVM + Subject x3 + word+char train=0.9988 val=0.9548 f1=0.9549 dim=134270 fit=51.4s cv=0.9495±0.0034
+[I3] Hard vote (SVM, NB, MLP)           train=0.9971 val=0.9448 f1=0.9451 dim= 34270 fit=106.4s cv=0.9395±0.0088
+     三个模型中至少一个正确的比例（投票准确率上限）: 0.9638
+
+=== 6. 最终模型选择（验证集性能 + 复杂度）===
+
+CV 参照: Linear SVM + Subject x3 + word+char cv=0.9495±0.0034；验证集最优 0.9548 (SE≈0.0062)
+等价候选:
+                               name  val_acc  cv_mean  cv_std  n_features  fit_sec
+Linear SVM + Subject x3 + word+char 0.954792 0.949538 0.00343      134270    51.35
+→ 最终模型: Linear SVM + Subject x3 + word+char  (candidate=svm_s3_char)
+
+=== 7. 最终配置的 C 复核 ===
+[I4] final features, LinearSVC C=0.1    train=0.9938 val=0.9467 f1=0.9467 dim=134270 fit=46.6s cv=0.9459±0.0059
+[I4] final features, LinearSVC C=0.3    train=0.9988 val=0.9548 f1=0.9549 dim=134270 fit=59.4s cv=0.9495±0.0034
+[I4] final features, LinearSVC C=1      train=0.9998 val=0.9530 f1=0.9531 dim=134270 fit=54.5s cv=0.9511±0.0043
+[I4] final features, LinearSVC C=3      train=0.9998 val=0.9503 f1=0.9505 dim=134270 fit=60.1s cv=0.9502±0.0039
+→ 最终特征下 C 选择 0.3 (val=0.9548, cv=0.9495, SE≈0.0062)

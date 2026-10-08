@@ -1,0 +1,58 @@
+子集大小: 5156 1106 1106
+各子集类别比例（应基本一致）:
+        train    val  test_local
+target                          
+0       0.099  0.099       0.099
+1       0.100  0.100       0.100
+2       0.100  0.100       0.100
+3       0.101  0.100       0.100
+4       0.101  0.101       0.101
+5       0.101  0.101       0.101
+6       0.101  0.101       0.100
+7       0.100  0.100       0.100
+8       0.101  0.100       0.100
+9       0.096  0.096       0.096
+
+训练集词数统计:
+ count     5156.0
+mean       264.9
+std        469.8
+min         15.0
+25%        107.0
+50%        172.5
+75%        279.0
+max      11821.0
+
+以 From: 开头且有空行分隔头部: 0.957
+含 Subject 行: 1.000  含 Organization 行: 0.957  含 > 引用行: 0.508
+
+头部字段出现频率 Top10:
+ 0
+From                 1.000
+Subject              1.000
+Lines                0.998
+Organization         0.956
+Nntp-Posting-Host    0.242
+Distribution         0.238
+NNTP-Posting-Host    0.200
+Reply-To             0.172
+Keywords             0.085
+X-Newsreader         0.067
+
+各类平均 TF-IDF 最高的词（仅训练集）:
+0 graphics edu image university lines subject organization files gif images file thanks program tiff com
+1 windows edu file dos microsoft mouse com files university use subject program lines driver organization
+2 scsi drive ide card edu com bus controller lines thanks subject bios organization ibm monitor
+3 car edu com cars article engine writes subject organization lines just university dealer usa like
+4 bike com dod edu writes article ride bmw bikes dog sun organization subject riding bnr
+5 edu baseball game team year games players com article writes organization subject hit lines braves
+6 key clipper encryption com chip government keys escrow edu des nsa netcom crypto security access
+7 edu com lines use subject organization circuit know power university copy does like host writes
+8 edu pitt com geb gordon banks msg medical doctor article organization subject lines know science
+9 israel israeli edu jews armenian turkish people armenians arab jewish serdar muslim argic jake muslims
+
+=== E0 基线（仅 train 拟合，val 评估）===
+[E0] draft SVC() rbf                    train=0.9981 val=0.8879 f1=0.8887 dim=  5000 fit=111.4s
+[E0] NB default                         train=0.9445 val=0.8825 f1=0.8826 dim=  5000 fit=1.6s
+[E0] LinearSVC default                  train=0.9986 val=0.9005 f1=0.9001 dim=  5000 fit=2.3s
+[E0] MLP (100,) max_iter=300            train=1.0000 val=0.9014 f1=0.9016 dim=  5000 fit=88.5s
