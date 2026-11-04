@@ -1,86 +1,124 @@
-# 实验一：新闻文本 10 分类
+# 实验二 搜索算法
 
-使用 TF-IDF 特征，比较 MultinomialNB（生成式）、线性 SVM（判别式最大间隔）、MLP（非线性神经网络）三类模型，
-并在验证集上完成预处理、特征和超参数选择。最终方案为 **线性 SVM + 删除邮件头 + Subject 重复 3 次 + 词级与字符级 n-gram TF-IDF**。
+当代人工智能实验课，2026 年秋季。实现四向网格 A*、Minimax 和 Alpha-Beta，并在宝藏分配问题中组合两类搜索。
 
-## 环境
+## 复现
 
-```bash
-conda create -n project1 python=3.11
-conda activate project1
-pip install -r requirements.txt
+在项目根目录使用 Python 3.11 或更新版本运行。测试与对照实验只依赖标准库。
+
+```powershell
+python -m unittest discover -s tests -v
+python -m src.run_experiments
 ```
 
-实验环境：Windows 11，Python 3.11.9，依赖版本见 `requirements.txt`。词干化使用 nltk 的 PorterStemmer，无需额外下载语料。
+实验入口先核对官方答案及对照组一致性，然后写出 10 条网格记录、24 条博弈记录和 JSON 详情。完整计时包含多批重复执行，耗时随机器负载变化。
 
-## 运行
+已生成的 Word 报告位于 `report/实验二搜索算法实验报告.docx`。如需按新一轮结果重建报告，安装可选的报告依赖后在根目录运行。
 
-所有命令在项目根目录执行，代码只使用相对路径。
-
-```bash
-python src/run_all.py          # 按顺序复现全部实验（约 1 小时）
-python src/final.py            # 只做最终评估并生成 predictions.csv（约 4 分钟）
-python src/test_preprocess.py  # 预处理边界用例检查
+```powershell
+python -m pip install -r report/requirements.txt
+python -m report.build_report
 ```
 
-也可以单独运行某一阶段，例如 `python src/stage3_models.py`。阶段 1–4 的选择结论固化在 `src/config.py` 中，
-`final.py` 运行前会核对它们与阶段 3、4 输出的选择文件是否一致。
+## 四题接口
 
-## 数据划分与使用规则
-
-`train_data.csv`（7368 条）按 70/15/15 分层划分，`random_state=42`：
-
-| 子集 | 条数 | 用途 |
+| 题目 | 接口 | 输入与输出 |
 |---|---|---|
-| train | 5156 | 拟合向量化器（词表、IDF）与模型参数 |
-| val | 1106 | 所有方案比较与超参数选择 |
-| test_local | 1106 | 方案锁定后只评估一次，作为最终性能 |
-| 官方测试集 | 2457 | 只用最终模型预测一次，生成 `predictions.csv` |
+| 1 迷宫 | `src.grid_search.maze_path(start, end, grid)` | 0 起始的 `(row, col)`、二维字符地图。返回含起终点的坐标列表，无解为 `[]` |
+| 2 加权地形 | `src.grid_search.minimum_terrain_cost(start, end, grid)` | 数字或数字字符串表示进入代价。初始代价为 0，标记格 `E` 进入代价为 0。返回整数代价，无解为 `-1` |
+| 3 博弈树 | `src.game_search.alpha_beta(root)` | 接受带 `children` 和 `value` 的根节点，MAX 开局，从左到右，返回根值。可用 `tree_from_json` 读取题面结构 |
+| 4 宝藏 | `src.treasure_game.distance_matrix(grid, points)` 和 `TreasureGame(matrix, values).solve(depth)` | 地图中的 A、B、T 格归一成 1，点顺序为 A、B、T1…，值按宝藏编号排列。返回 `best_target` 与 `best_value`，传 `prune=False` 使用 Minimax |
 
-- 向量化器与分类器放在同一个 `Pipeline` 中，只在当前训练部分上 `fit`；交叉验证只在 train+val（开发集）内进行。
-- 预处理（删邮件头、删引用、词干化等）都是逐条规则，不使用语料统计量，因此可以统一应用到各子集。
-- 选择规则：验证集准确率在最优者 1 个标准误内、且开发集 5 折 CV 在参照配置 1 个标准差内的方案视为等价，
-  取其中最简单（正则化最强 / 维度最小 / 耗时最短）的方案。
+`X` 在网格中表示不可通行。题二支持普通零权格，有额外零权格时采用零启发式。综合题根层固定按编号访问，等分时选择编号最小的宝藏。深层的 `index`、`reverse` 和 `gain` 分别表示编号、逆序及当前行动方的即时收益降序。自设地图若当前玩家没有可达目标，按当前收益差终止。
 
 ## 代码结构
 
 ```text
-src/
-├── data.py               数据加载与 70/15/15 分层划分
-├── preprocess.py         逐条清洗（邮件头、引用、噪声、停用词、词干化、Subject 加权）
-├── features.py           TF-IDF / 词袋 / 词级+字符级向量化器
-├── models.py             NB、LinearSVC、SVC、MLP、硬投票集成；参数量统计
-├── experiment.py         统一的训练-评估-记录函数（train 拟合，val 评估，可选开发集 CV）
-├── config.py             各阶段锁定的配置
-├── test_preprocess.py    预处理边界用例检查
-├── stage0_eda_baseline.py  划分检查、训练集数据探查、E0 基线
-├── stage1_preprocess.py    预处理消融
-├── stage2_features.py      特征工程
-├── stage3_models.py        三个模型调参、核函数对比、MLP 逐轮曲线
-├── stage4_analysis.py      CV 稳健性、误差分析、权重词、创新实验、最终模型选择
-├── final.py                本地测试集评估一次 + 全量重训 + 生成 predictions.csv
-└── run_all.py              一键复现
-results/
-├── stage*_*.csv / *.json   各阶段完整结果
-├── figures/                图表
-└── logs/                   各阶段运行日志
+.
+├── README.md                         项目说明、运行方法与结果索引
+├── src/
+│   ├── cases.py                      官方样例、自设对照地图和预期结果
+│   ├── grid_search.py                通用 A*、迷宫寻路和加权地形搜索
+│   ├── game_search.py                通用 Minimax、Alpha-Beta 和博弈树接口
+│   ├── treasure_game.py              距离矩阵、宝藏状态转移与对抗搜索
+│   └── run_experiments.py            正确性验收、计时对照与结果导出
+├── tests/
+│   └── test_search.py                官方样例、边界用例与随机交叉校验
+├── results/
+│   ├── grid_comparisons.csv          A* 启发式与加权地形对照数据
+│   ├── game_comparisons.csv          Minimax、剪枝、深度和排序对照数据
+│   └── details.json                  路径、距离矩阵、根动作值与最优应对
+└── report/
+    └──  report.pdf                    最终实验报告
 ```
 
-## 主要结果
+### `src/grid_search.py`
 
-| 模型 | 验证集 Acc | 开发集 5 折 CV | 本地测试集 Acc | 参数量 | 训练耗时 (dev) |
-|---|---|---|---|---|---|
-| MultinomialNB (alpha=0.1) | 0.9412 | 0.9376 ± 0.0065 | 0.9250 | 0.38M | 约 3 s |
-| Linear SVM (C=0.3) | 0.9331 | 0.9348 ± 0.0080 | 0.9385 | 0.38M | 约 2 s |
-| MLP (100,), alpha=1e-4 | 0.9430 | 0.9353 ± 0.0083 | 0.9385 | 3.77M | 约 88 s |
-| **最终方案** | **0.9548** | **0.9495 ± 0.0034** | **0.9530** | 1.38M | 约 46 s |
+该模块负责题目一和题目二，并为题目四提供最短路计算能力。
 
-三个基础模型的准确率在统计上无显著差异，差异主要体现在复杂度上（MLP 参数量约为其余两者的 10 倍，训练耗时约为 30–40 倍）。
-最终方案的提升来自 Subject 加权与字符 n-gram 两项特征改进。训练耗时受机器负载影响有波动，仅供数量级比较。
+- `GridResult` 统一保存路径、总代价、展开节点数、堆峰值、过期堆项数量和终点弹出次数。
+- `astar` 是通用四连通网格搜索。调用者提供每个格子的进入代价和启发函数，模块负责优先队列、`g_score`、前驱回溯和过期堆项处理。
+- `maze_search` 把非障碍格统一设为代价 1，可切换曼哈顿距离或零启发式。`maze_path` 是题目一要求的简化接口，只返回坐标序列。
+- `terrain_costs` 将数字、数字字符串、`S`、`E` 和 `X` 转换为内部代价地图，并检查非法输入。
+- `terrain_search` 使用进入目标格的权值累计代价。`E` 的进入代价为 0，并使用扣除免费终点一步后的可采纳启发式。`minimum_terrain_cost` 是题目二要求的简化接口，只返回最小总代价或 `-1`。
 
-## 复现说明
+### `src/game_search.py`
 
-- 所有随机过程（数据划分、LinearSVC、SVC、MLP、交叉验证的打乱）固定 `random_state=42`。
-- MLP 的阶段 3 调参使用多线程并行训练，记录的耗时偏大；阶段 4、5 为单独计时。
-- 多线程 BLAS 可能导致 MLP 的结果在不同机器上有极小的浮点差异。
-- 提交文件 `predictions.csv`：2457 行、单列、无表头、整数标签 0–9，顺序与 `test_data_unlabeled.csv` 一致。
+该模块实现题目三，同时提供可复用于题目四的通用博弈搜索框架。
+
+- `TreeNode` 表示题面给出的博弈树。叶子使用 `value`，非叶节点使用 `children`。
+- `GameStats` 和 `GameResult` 保存根值、首个最优动作、访问节点、叶评估、截断次数和跳过的子节点数。
+- `search_game` 通过“评价函数、动作生成器、状态转移函数”三个回调搜索显式树或隐式状态空间。`prune=False` 时执行 Minimax，`prune=True` 时执行 Alpha-Beta。
+- `tree_from_json` 将题面 JSON 转为 `TreeNode`，并检查 MAX、MIN 是否逐层交替。
+- `tree_search` 支持左至右、逆序和固定随机种子的访问顺序。`minimax` 与 `alpha_beta` 是题目三的直接接口。
+
+### `src/treasure_game.py`
+
+该模块完成题目四，将网格最短路和对抗搜索连接起来。
+
+- `distance_matrix` 对 A、B 和全部宝藏计算有序点对最短距离，保留进格代价可能造成的方向差异。
+- `State` 是不可变博弈状态，记录 A、B 的当前位置、剩余宝藏、双方累计收益和当前行动方。`utility` 返回 `Score_A - Score_B`。
+- `TreasureGame.move` 按 `宝藏价值 - 最短移动代价` 更新行动方收益和位置，并从剩余集合中移除目标。
+- `TreasureGame.search` 在指定深度运行 Minimax 或 Alpha-Beta，并支持编号、逆序和即时收益三种深层访问顺序。
+- `solve` 返回题目要求的 `best_target` 和 `best_value`。`exact_root_values` 为每个首步重新打开完整搜索窗口，得到可用于报告的精确回传值。`optimal_line` 输出一条完整最优应对序列。
+
+### `src/cases.py`
+
+该模块集中保存实验输入，使测试、实验脚本和报告使用同一份数据。
+
+- `MAZE`、`TERRAIN`、`TREE` 和 `TREASURE_MAP` 是从题面转录的四道官方样例。
+- `EXPECTED_DISTANCES` 与 `EXPECTED_ROOT_VALUES` 是综合题的验收基准。
+- `OPEN`、`DETOUR` 和 `SHORTCUT` 用于分析启发函数和加权路径选择。
+- `EXTENSION_MAP`、`EXTENSION_POINTS` 和 `EXTENSION_VALUES` 构成六宝藏拓展实验。
+- `numeric_grid` 将字符串地图中的数字转为整数，同时保留障碍标记。
+
+### `src/run_experiments.py`
+
+该模块是一键复现实验的入口，先检查结果，再导出数据。
+
+- `grid_comparisons` 比较迷宫与加权地形中的零启发式和 A* 启发式，记录代价、步数、展开数、堆峰值和耗时。
+- `game_comparisons` 比较 Minimax、Alpha-Beta、搜索深度和访问顺序，并运行六宝藏拓展实验。
+- `measure` 预热后执行 7 批重复测量，保存每次运行耗时的中位数。
+- `require` 在导出前核对官方答案、距离矩阵、根动作值和不同算法的一致性。任何验收失败都会终止实验。
+- `main` 将汇总数据写入 `results/`，终端同时显示四题的关键答案。
+
+### 测试、结果与报告
+
+- `tests/test_search.py` 的 `GridTests` 覆盖官方迷宫、无解、起终点相同、加权地形、免费终点和随机地图的启发式一致性。`GameTests` 覆盖官方树、负数与零、相等值剪枝、随机树交叉校验、官方宝藏题、有向距离、不可达目标和等分首步。
+- `results/grid_comparisons.csv` 与 `results/game_comparisons.csv` 是报告表格的原始数据。`results/details.json` 保存不适合放入扁平 CSV 的逐步路径、矩阵和最优行动序列。
+
+## 样例结果
+
+| 题目 | 结果 |
+|---|---|
+| 1 | 7 步，8 个坐标 |
+| 2 | 代价 7，含 8 次移动 |
+| 3 | 根值 5 |
+| 4 | H=2 为 `T2 / -1`，H=4 为 `T3 / 3`，两种算法一致 |
+
+## 文件和指标
+
+- `src/cases.py` 包含官方样例及自设地图，`tests/test_search.py` 包含边界、官方答案和固定种子的随机交叉校验。
+- `results/grid_comparisons.csv` 保存代价、步数、展开、堆峰值、过时项弹出及耗时。展开数只计实际生成邻居的节点。
+- `results/game_comparisons.csv` 保存首步、收益、访问数、叶评估、剪枝及耗时。只有实际跳过后继才记一次截断。矩阵、搜索和端到端时间独立测量。即时排序探测单独运行，包含计时调用开销。
+- `results/details.json` 保存环境、逐格路径代价、距离矩阵、精确根动作值和最优应对。深度和排序对照的原始记录可以直接从 CSV 筛选。

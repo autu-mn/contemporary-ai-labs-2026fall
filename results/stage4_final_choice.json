@@ -1,5 +1,0 @@
-{
-  "candidate": "svm_s3_char",
-  "name": "Linear SVM + Subject x3 + word+char",
-  "C": 0.3
-}

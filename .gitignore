@@ -7,3 +7,8 @@ __pycache__/
 # Word 打开文档时生成的临时文件
 ~$*
 report/_p*.png
+
+# 本地流程与要求材料，不提交
+实验二流程规划.md
+实验二要求_new.pdf
+report/report.docx
