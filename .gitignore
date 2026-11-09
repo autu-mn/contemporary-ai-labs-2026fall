@@ -1,14 +1,15 @@
 __pycache__/
-*.pyc
-.DS_Store
-.vscode/
-.idea/
+*.py[cod]
+.pytest_cache/
+.coverage
 
-# Word 打开文档时生成的临时文件
-~$*
-report/_p*.png
+# Local report rendering and office lock files
+report/_qa/
+report/.lo_profile*/
+~$*.docx
 
-# 本地流程与要求材料，不提交
-实验二流程规划.md
-实验二要求_new.pdf
+# Local assignment materials, not for the repository
 report/report.docx
+实验二要求_new.md
+实验二要求_new.pdf
+

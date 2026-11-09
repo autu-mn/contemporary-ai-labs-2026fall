@@ -1,8 +1,7 @@
-"""Shared minimax recursion for explicit trees and implicit game states."""
+"""Explicit Minimax and Alpha-Beta implementations for Question 3."""
 
 from dataclasses import dataclass, field
 from math import inf
-from random import Random
 
 
 @dataclass
@@ -12,90 +11,93 @@ class TreeNode:
 
 
 @dataclass
-class GameStats:
+class SearchStats:
     visited: int = 0
     leaves: int = 0
     cutoffs: int = 0
-    skipped_children: int = 0
+    pruned_children: int = 0
 
 
 @dataclass
 class GameResult:
     value: int
-    action: object
-    stats: GameStats
+    action: int | None
+    stats: SearchStats
 
 
-def search_game(root, evaluate, actions, advance, *, depth=None, prune=True, maximizing=True):
-    """Callbacks expose a terminal score, ordered actions, and a successor."""
-    stats = GameStats()
+def _children(node: TreeNode, order: str) -> list[tuple[int, TreeNode]]:
+    if order not in {"left", "reverse"}:
+        raise ValueError(f"unknown child order: {order}")
+    indexed = list(enumerate(node.children))
+    return indexed if order == "left" else indexed[::-1]
 
-    def visit(state, maximizing, remaining, alpha, beta, is_root=False):
+
+def minimax_search(root: TreeNode, *, order: str = "left") -> GameResult:
+    """Search the full tree. The root is MAX and levels alternate."""
+    stats = SearchStats()
+
+    def visit(node: TreeNode, maximizing: bool) -> tuple[int, int | None]:
         stats.visited += 1
-        choices = actions(state, is_root) if remaining != 0 else ()
-        if not choices:
+        if not node.children:
+            if node.value is None:
+                raise ValueError("a leaf must contain a numeric value")
             stats.leaves += 1
-            return evaluate(state), None
+            return node.value, None
 
-        value = -inf if maximizing else inf
+        best_value = -inf if maximizing else inf
         best_action = None
-        next_depth = None if remaining is None else remaining - 1
-        for i, action in enumerate(choices):
-            child_value, _ = visit(advance(state, action), not maximizing, next_depth, alpha, beta)
-            if (maximizing and child_value > value) or (not maximizing and child_value < value):
-                value, best_action = child_value, action
-            if prune:
-                if maximizing:
-                    alpha = max(alpha, value)
-                else:
-                    beta = min(beta, value)
-                if alpha >= beta and i + 1 < len(choices):
-                    stats.cutoffs += 1
-                    stats.skipped_children += len(choices) - i - 1
-                    break
-        return value, best_action
+        for action, child in _children(node, order):
+            child_value, _ = visit(child, not maximizing)
+            better = child_value > best_value if maximizing else child_value < best_value
+            if better or (child_value == best_value and
+                          (best_action is None or action < best_action)):
+                best_value, best_action = child_value, action
+        return int(best_value), best_action
 
-    if depth is not None and depth < 0:
-        raise ValueError("depth must be nonnegative")
-    value, action = visit(root, maximizing, depth, -inf, inf, True)
+    value, action = visit(root, True)
     return GameResult(value, action, stats)
 
 
-def tree_from_json(payload):
-    def build(node, maximizing):
-        if "children" not in node:
-            return TreeNode(node["value"])
-        if node.get("is_maximizing_player", maximizing) != maximizing:
-            raise ValueError("players must alternate from a MAX root")
-        return TreeNode(children=[build(child, not maximizing) for child in node["children"]])
+def alpha_beta_search(root: TreeNode, *, order: str = "left") -> GameResult:
+    """Run left-to-right Alpha-Beta unless a comparison order is requested."""
+    stats = SearchStats()
 
-    return build(payload["tree_structure"], True)
+    def visit(node: TreeNode, maximizing: bool, alpha: float, beta: float) -> tuple[int, int | None]:
+        stats.visited += 1
+        if not node.children:
+            if node.value is None:
+                raise ValueError("a leaf must contain a numeric value")
+            stats.leaves += 1
+            return node.value, None
+
+        choices = _children(node, order)
+        best_value = -inf if maximizing else inf
+        best_action = None
+        for position, (action, child) in enumerate(choices):
+            child_value, _ = visit(child, not maximizing, alpha, beta)
+            better = child_value > best_value if maximizing else child_value < best_value
+            if better or (child_value == best_value and
+                          (best_action is None or action < best_action)):
+                best_value, best_action = child_value, action
+
+            if maximizing:
+                alpha = max(alpha, best_value)
+            else:
+                beta = min(beta, best_value)
+            if alpha >= beta and position + 1 < len(choices):
+                stats.cutoffs += 1
+                stats.pruned_children += len(choices) - position - 1
+                break
+        return int(best_value), best_action
+
+    value, action = visit(root, True, -inf, inf)
+    return GameResult(value, action, stats)
 
 
-def tree_search(root, *, prune=True, order="left", seed=42):
-    if order not in ("left", "reverse", "shuffle"):
-        raise ValueError(f"unknown tree order: {order}")
-    rng = Random(seed)
-
-    def actions(node, _):
-        choices = list(range(len(node.children)))
-        if order == "reverse":
-            choices.reverse()
-        elif order == "shuffle":
-            rng.shuffle(choices)
-        return choices
-
-    def evaluate(node):
-        if node.value is None:
-            raise ValueError("leaf must have a score")
-        return node.value
-
-    return search_game(root, evaluate, actions, lambda node, i: node.children[i], prune=prune)
+def minimax(root: TreeNode) -> int:
+    return minimax_search(root).value
 
 
-def minimax(root) -> int:
-    return tree_search(root, prune=False).value
+def alpha_beta(root: TreeNode) -> int:
+    return alpha_beta_search(root).value
 
-
-def alpha_beta(root) -> int:
-    return tree_search(root).value

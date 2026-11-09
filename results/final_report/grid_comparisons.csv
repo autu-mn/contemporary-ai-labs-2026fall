@@ -1,0 +1,11 @@
+﻿question,case,heuristic,cost,steps,expanded,peak_frontier,time_us,batches,repeats
+Q1,official_maze,zero,7,7,15,3,54.38,7,60
+Q1,official_maze,manhattan,7,7,13,3,56.52,7,60
+Q1,open_21,zero,20,20,320,22,1384.34,7,60
+Q1,open_21,manhattan,20,20,20,41,213.97,7,60
+Q1,detour_21,zero,36,36,356,20,1481.31,7,60
+Q1,detour_21,manhattan,36,36,260,40,1209.15,7,60
+Q2,official_terrain,zero,7,8,14,10,85.07,7,60
+Q2,official_terrain,adjusted_manhattan,7,8,10,9,76.38,7,60
+Q2,expensive_shortcut,zero,4,5,5,3,25.74,7,60
+Q2,expensive_shortcut,adjusted_manhattan,4,5,5,3,30.34,7,60
