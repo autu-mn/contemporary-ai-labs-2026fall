@@ -7,6 +7,7 @@
 | 实验 | 分支 | 内容 |
 | --- | --- | --- |
 | 实验一 | [`lab1-text-classification`](https://github.com/autu-mn/contemporary-ai-labs-2026fall/tree/lab1-text-classification) | 文本分类 |
+| 实验二 | [`lab2-search-algorithms`](https://github.com/autu-mn/contemporary-ai-labs-2026fall/tree/lab2-search-algorithms) | 搜索算法 |
 
 后续实验按同样方式从 `main` 开分支，并补进上表。
 
