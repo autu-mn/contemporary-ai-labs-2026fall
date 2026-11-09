@@ -65,26 +65,26 @@ Minimax 与 Alpha-Beta 必须得到一致的最优首步和根值，区别只体
 
 ```text
 .
-├── q1_maze.py
-├── q2_terrain.py
-├── q3_game_tree.py
-├── q4_treasure.py
-├── src/
-│   ├── cases.py
-│   ├── grid_search.py
-│   ├── game_search.py
-│   ├── treasure_game.py
-│   └── run_experiments.py
+├── q1_maze.py                  # 题目一入口：等权迷宫最短路径
+├── q2_terrain.py               # 题目二入口：加权地形最小代价
+├── q3_game_tree.py             # 题目三入口：博弈树 Minimax / Alpha-Beta
+├── q4_treasure.py              # 题目四入口：距离矩阵与宝藏博弈
+├── src/                        # 算法实现；四道题的入口只做调用
+│   ├── cases.py                # 官方样例、期望结果和六宝藏自设输入
+│   ├── grid_search.py          # 四方向 A*，题目一、二及题目四距离矩阵共用
+│   ├── game_search.py          # 通用 Minimax 与 Alpha-Beta
+│   ├── treasure_game.py        # 宝藏状态、收益计算和对抗搜索
+│   └── run_experiments.py      # 先验收官方答案，再导出对照数据
 ├── tests/
-│   └── test_lab2.py
+│   └── test_lab2.py            # 官方样例、边界，以及 Dijkstra / Minimax 交叉验证
 ├── results/
-│   ├── official_results.json
-│   ├── grid_comparisons.csv
-│   ├── game_comparisons.csv
-│   └── final_report/
+│   ├── official_results.json   # 路径、距离矩阵、根动作值和最优序列
+│   ├── grid_comparisons.csv    # A* 与零启发式的扩展量对照
+│   ├── game_comparisons.csv    # 算法、深度和访问顺序对照
+│   └── final_report/           # 正式报告单独复现的一组结果
 └── report/
-    ├── final_assets/
-    └── report.pdf
+    ├── final_assets/           # 报告插图：路径、剪枝和拓展实验
+    └── report.pdf              # 正式实验报告
 
 ```
 
